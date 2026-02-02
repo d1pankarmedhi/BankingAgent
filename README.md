@@ -17,7 +17,7 @@ A banking agent system built with **Model Context Protocol (MCP)** server archit
 
 1. **Clone and navigate to the project:**
    ```bash
-   cd AIAgent
+   cd BankingAgent
    ```
 
 2. **Install dependencies using [uv](https://github.com/astral-sh/uv):**
