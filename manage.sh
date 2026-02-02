@@ -70,7 +70,7 @@ start_mcp_server() {
     fi
     
     print_info "Starting MCP Server..."
-    nohup uv run python -m mcp_server.main > "$MCP_SERVER_LOG" 2>&1 &
+    nohup setsid uv run python -m mcp_server.main > "$MCP_SERVER_LOG" 2>&1 &
     echo $! > "$MCP_SERVER_PID"
     
     sleep 2
@@ -91,7 +91,7 @@ start_agent_service() {
     fi
     
     print_info "Starting Agent Service..."
-    nohup uv run python -m mcp_client.agent_service > "$AGENT_SERVICE_LOG" 2>&1 &
+    nohup setsid uv run python -m mcp_client.agent_service > "$AGENT_SERVICE_LOG" 2>&1 &
     echo $! > "$AGENT_SERVICE_PID"
     
     sleep 2
@@ -118,7 +118,7 @@ start_frontend() {
     
     print_info "Starting Frontend..."
     cd frontend
-    nohup npm run dev > "$FRONTEND_LOG" 2>&1 &
+    nohup setsid npm run dev > "$FRONTEND_LOG" 2>&1 &
     echo $! > "$FRONTEND_PID"
     cd ..
     
@@ -141,7 +141,7 @@ stop_mcp_server() {
     if is_running "$MCP_SERVER_PID"; then
         local pid=$(cat "$MCP_SERVER_PID")
         print_info "Stopping MCP Server (PID: $pid)..."
-        kill "$pid" 2>/dev/null || true
+        kill -TERM -"$pid" 2>/dev/null || kill "$pid" 2>/dev/null || true
         rm -f "$MCP_SERVER_PID"
         print_success "MCP Server stopped"
     else
@@ -154,7 +154,7 @@ stop_agent_service() {
     if is_running "$AGENT_SERVICE_PID"; then
         local pid=$(cat "$AGENT_SERVICE_PID")
         print_info "Stopping Agent Service (PID: $pid)..."
-        kill "$pid" 2>/dev/null || true
+        kill -TERM -"$pid" 2>/dev/null || kill "$pid" 2>/dev/null || true
         rm -f "$AGENT_SERVICE_PID"
         print_success "Agent Service stopped"
     else
@@ -167,7 +167,7 @@ stop_frontend() {
     if is_running "$FRONTEND_PID"; then
         local pid=$(cat "$FRONTEND_PID")
         print_info "Stopping Frontend (PID: $pid)..."
-        kill "$pid" 2>/dev/null || true
+        kill -TERM -"$pid" 2>/dev/null || kill "$pid" 2>/dev/null || true
         rm -f "$FRONTEND_PID"
         print_success "Frontend stopped"
     else
